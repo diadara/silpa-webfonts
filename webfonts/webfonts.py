@@ -20,7 +20,7 @@ from jinja2 import TemplateNotFound
 from fonts import fonts as available_fonts
 
 blueprint = Blueprint('webfonts', __name__,
-                      template_folder='templates', static_folder='fonts')
+                      template_folder='templates', static_folder='fonts', static_url_path='/fonts')
 
 
 @blueprint.route('/webfonts', methods=['GET'])
@@ -31,8 +31,8 @@ def serve():
                 abort(400)
         else:
                 fonts = [{'family': f,
-                          'eot': url_for('static', filename=available_fonts[f]['eot']),
-                        'woff': url_for('static', filename=available_fonts[f]['woff']),
-                          'ttf': url_for('static', filename=available_fonts[f]['ttf'])
+                          'eot': url_for('webfonts.static', _external=True, filename=available_fonts[f]['eot']),
+                          'woff': url_for('webfonts.static',  _external=True, filename=available_fonts[f]['woff']),
+                          'ttf': url_for('webfonts.static', _external=True, filename=available_fonts[f]['ttf'])
                           } for f in match_request]
                 return render_template('webfonts.css', fonts=fonts)
