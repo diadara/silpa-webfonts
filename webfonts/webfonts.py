@@ -15,17 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-from flask import Blueprint, render_template, abort, request, url_for, abort
-from jinja2 import TemplateNotFound
+
+from flask import Blueprint, render_template, request, url_for, abort
 from fonts import fonts as available_fonts
 
 blueprint = Blueprint('webfonts', __name__,
-                      template_folder='templates', static_folder='fonts', static_url_path='/fonts')
+                      template_folder='templates', static_folder='fonts', static_url_path='/webfonts/static')
 
 
 @blueprint.route('/webfonts', methods=['GET'])
 def serve():
-        req_fonts = request.args.get('font').split('|')
+        try:
+                req_fonts = request.args.get('font').split('|')
+        except AttributeError:
+                abort(400)
         match_request = set(req_fonts).intersection(set(available_fonts.keys()))
         if not match_request:
                 abort(400)
