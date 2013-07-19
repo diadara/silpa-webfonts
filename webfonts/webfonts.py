@@ -16,7 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from flask import Blueprint, render_template, request, url_for, abort
+from flask import Blueprint, render_template, request, url_for, abort, make_response
 from fonts import fonts as available_fonts
 
 blueprint = Blueprint('webfonts', __name__,
@@ -38,4 +38,6 @@ def serve():
                           'woff': url_for('webfonts.static',  _external=True, filename=available_fonts[f]['woff']),
                           'ttf': url_for('webfonts.static', _external=True, filename=available_fonts[f]['ttf'])
                           } for f in match_request]
-                return render_template('webfonts.css', fonts=fonts)
+                resp = make_response(render_template('webfonts.css', fonts=fonts))
+                resp.headers.add('content-type', 'text/css')
+                return resp
