@@ -39,5 +39,5 @@ def serve():
                           'ttf': url_for('webfonts.static', _external=True, filename=available_fonts[f]['ttf'])
                           } for f in match_request]
                 resp = make_response(render_template('webfonts.css', fonts=fonts))
-                resp.headers.add('content-type', 'text/css')
+                resp.mimetype = 'text/css'
                 return resp
